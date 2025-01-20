@@ -6,6 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.equalTo;
 
 public class Mesto1Test {
     String bearerToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzJjZDZjOTNhMDdkZjAwM2QxMjJhODUiLCJpYXQiOjE3MzcxMzQxMzIsImV4cCI6MTczNzczODkzMn0.vtRTPw3vAhic_gzg4jl83Y7O8hTSnkCeaLoFoHR2OzE";
@@ -35,6 +36,16 @@ public class Mesto1Test {
 
         likePhotoById(photoId);
         deleteLikePhotoById(photoId);
+    }
+
+    @Test
+    @DisplayName("Check user name")
+    @Description("This test is for check current user's name.")
+    public void checkUserName() {
+        given()
+                .auth().oauth2(bearerToken) // Передаём токен для аутентификации
+                .get("/api/users/me") // Делаем GET-запрос
+                .then().assertThat().body("data.name", equalTo("Incorrect Name")); // Проверяем, что имя соответствует ожидаемому
     }
 
     @Step("Take the first photo from the list")
